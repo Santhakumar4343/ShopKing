@@ -48,7 +48,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 RUN composer clear-cache
 
 # Run Composer with --ignore-platform-reqs=ext-http
-RUN composer install --no-interaction --optimize-autoloader --ignore-platform-reqs=ext-http
+RUN composer install --no-interaction --optimize-autoloader --ignore-platform-reqs
 
 # Install frontend dependencies using npm
 RUN npm install
