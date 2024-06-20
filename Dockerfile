@@ -46,8 +46,9 @@ COPY . /var/www/html
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Clean Composer cache
 RUN composer clear-cache
-# Install PHP dependencies using Composer
-RUN composer install --no-interaction --optimize-autoloader
+
+# Run Composer with --ignore-platform-reqs=ext-http
+RUN composer install --no-interaction --optimize-autoloader --ignore-platform-reqs=ext-http
 
 # Install frontend dependencies using npm
 RUN npm install
