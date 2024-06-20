@@ -29,6 +29,10 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-enable imagick \
     && a2enmod rewrite
 
+# Install Node.js and npm
+RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash - \
+    && apt-get install -y nodejs
+
 # Disable open_basedir
 RUN echo "php_admin_value open_basedir none" >> /etc/apache2/apache2.conf
 
@@ -38,15 +42,17 @@ WORKDIR /var/www/html
 # Copy the application files to the working directory
 COPY . /var/www/html
 
-# Install Composer and dependencies
+# Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Install PHP dependencies using Composer
 RUN composer install --no-interaction --optimize-autoloader
+
+# Install frontend dependencies using npm
+RUN npm install
 
 # Set permissions for Laravel
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
-
-# Expose port 8000 for php artisan serve
-EXPOSE 8000
 
 # Start the application
 CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
