@@ -41,7 +41,7 @@ WORKDIR /var/www/html
 
 # Copy the application files to the working directory
 COPY . /var/www/html
-
+COPY .env /var/www/html/.env
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Clean Composer cache
