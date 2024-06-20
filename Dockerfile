@@ -20,7 +20,6 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install pdo_mysql \
     && docker-php-ext-install mysqli \
     && docker-php-ext-install mbstring \
-    && docker-php-ext-install tokenizer \
     && docker-php-ext-install xml \
     && docker-php-ext-install exif \
     && docker-php-ext-install fileinfo \
