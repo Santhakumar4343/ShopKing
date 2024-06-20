@@ -44,7 +44,8 @@ COPY . /var/www/html
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
+# Clean Composer cache
+RUN composer clear-cache
 # Install PHP dependencies using Composer
 RUN composer install --no-interaction --optimize-autoloader
 
