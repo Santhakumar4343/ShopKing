@@ -6,7 +6,6 @@
     "license": "MIT",
     "require": {
         "php": "^8.1",
-        "ext-http": "*",
         "anandsiddharth/laravel-paytm-wallet": "^2.0",
         "dipesh79/laravel-phonepe": "*",
         "dipokhalder/laravel-env-editor": "^1.0",
