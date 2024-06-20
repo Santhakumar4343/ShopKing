@@ -1,5 +1,5 @@
 # Use the official PHP image with Apache
-FROM php:8.2-apache
+FROM php:8.1-apache
 
 # Install dependencies
 RUN apt-get update && apt-get install -y \
@@ -20,6 +20,7 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install pdo_mysql \
     && docker-php-ext-install mysqli \
     && docker-php-ext-install mbstring \
+    && docker-php-ext-install tokenizer \
     && docker-php-ext-install xml \
     && docker-php-ext-install exif \
     && docker-php-ext-install fileinfo \
@@ -38,15 +39,17 @@ WORKDIR /var/www/html
 # Copy the application files to the working directory
 COPY . /var/www/html
 
-# Install Composer and dependencies
+# Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Install Composer dependencies
 RUN composer install --no-interaction --optimize-autoloader
 
 # Set permissions for Laravel
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Expose port 8000 for php artisan serve
+# Expose port 8000 for php artisan serve (optional if using a web server)
 EXPOSE 8000
 
-# Start the application
+# Start the application (optional if using a web server)
 CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
