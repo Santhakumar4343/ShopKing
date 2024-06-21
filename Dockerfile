@@ -3,7 +3,6 @@ FROM php:8.2.0-apache
 
 # Install dependencies
 RUN apt-get update && apt-get install -y \
-    # Install required system packages
     libfreetype6-dev \
     libjpeg62-turbo-dev \
     libpng-dev \
@@ -15,10 +14,6 @@ RUN apt-get update && apt-get install -y \
     pkg-config \
     unzip \
     git \
-    # Install Composer
-    && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
-    && composer --version \
-    # Install PHP extensions
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) gd \
     && docker-php-ext-install zip \
@@ -34,6 +29,10 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-enable imagick \
     && a2enmod rewrite
 
+# Install Node.js and npm
+RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash - \
+    && apt-get install -y nodejs
+
 # Disable open_basedir
 RUN echo "php_admin_value open_basedir none" >> /etc/apache2/apache2.conf
 
@@ -42,16 +41,20 @@ WORKDIR /var/www/html
 
 # Copy the application files to the working directory
 COPY . /var/www/html
+COPY .env /var/www/html/.env
+# Install Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+# Clean Composer cache
+RUN composer clear-cache
 
-# Install Composer dependencies
+# Run Composer with --ignore-platform-reqs=ext-http
 RUN composer install --no-interaction --optimize-autoloader --ignore-platform-reqs
+
+# Install frontend dependencies using npm
+RUN npm install
 
 # Set permissions for Laravel
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
-
-# Start Apache
-CMD ["apache2-foreground"]
-
 
 # Start the application
 CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
