@@ -39,7 +39,7 @@ RUN echo "php_admin_value open_basedir none" >> /etc/apache2/apache2.conf
 # Set the working directory
 WORKDIR /var/www/html
 
-# Copy the application files to the working directory
+# Copy the application files to the workingm directory
 COPY . /var/www/html
 COPY .env /var/www/html/.env
 # Install Composer
