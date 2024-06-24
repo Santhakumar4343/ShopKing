@@ -16,11 +16,11 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
-/public/js/app.js
-/public/css/app.css
-public/js/app.js
-public/js/*js
-public/css/app.css
+# /public/js/app.js
+# /public/css/app.css
+# public/js/app.js
+# public/js/*js
+# public/css/app.css
 /storage/media-library
 storage/media-library
 */storage/media-library
